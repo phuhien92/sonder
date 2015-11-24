@@ -10,3 +10,4 @@ If you want the source code of the final working Ionic application, make sure yo
 
 ### Need help?
 Feel free to [shoot me a tweet](https://twitter.com/ericsimons40), or if you have [Thinkster Pro](https://thinkster.io/pro), I'm also available on the Pro Slack channel for one-on-one support.
+# sonder
