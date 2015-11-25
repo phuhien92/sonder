@@ -1,6 +1,6 @@
 Native Speed HTML5 Based Apps
 =======
-### Sonder App
+### Song + Tinder = Sonder App
 this app intends to leverage the tinder app design with music world. Quick look up for new song and add to your favorite list.
 
 # Getting the base project set up
