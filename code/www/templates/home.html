@@ -1,0 +1,25 @@
+<ion-view view-title="{{navTitle}}">
+	<ion-content class="" >
+		<div class="well padding">
+			</br>
+			<h3>
+				<i class="ion-compass"></i>
+				<span>Explore</span>
+			</h3>
+
+			<div class="row" ng-repeat="music in musicCollections" ng-if="$index % 2 === 0">
+			  	<div class="item-curve col col-50" ng-if="$index < musicCollections.length">
+			    	<a class="" href="#/tab/discover" ng-click="changeTitle('{{musicCollections[$index].tag}}')">
+			    	<img ng-src="{{musicCollections[$index].image}}" style="width:100%;" class="item-curve"></a>
+			  	</div>
+			  	<div class="col col-50" ng-if="$index + 1 < musicCollections.length">
+			    	<a class="" href="#/tab/discover" ng-click="changeTitle('{{musicCollections[$index + 1].tag}}')">
+			    	<img ng-src="{{musicCollections[$index + 1].image}}" style="width:100%;" class="item-curve"></a>
+			  	</div>
+			</div>
+			
+		  	</br>
+		</div>
+		
+	</ion-content>
+</ion-view>

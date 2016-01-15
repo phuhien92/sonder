@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('songhop', ['ionic', 'songhop.controllers'])
+angular.module('songhop', ['ionic','ngCordova','songhop.controllers'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -35,17 +35,41 @@ angular.module('songhop', ['ionic', 'songhop.controllers'])
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html',
-    controller: 'TabsCtrl'
+    controller: 'TabsCtrl',
+    resolve: {
+      populateSession: function(User) {
+        return User.checkSession();
+      }
+    },
+    onEnter: function($state, User) {
+      User.checkSession().then(function(hasSession) {
+        if (!hasSession) $state.go('splash');
+      })
+    }
   })
 
   // Each tab has its own nav history stack:
+  .state('tab.home', {
+    url: '/home',
+    views: {
+      'tab-discover': {
+        templateUrl: 'templates/home.html',
+        controller: 'HomeCtrl',
+      }
+    }
+  })
 
   .state('tab.discover', {
     url: '/discover',
     views: {
       'tab-discover': {
         templateUrl: 'templates/discover.html',
-        controller: 'DiscoverCtrl'
+        controller: 'DiscoverCtrl',
+        resolve: {
+          pageTitle: function(TitleService) {
+            return TitleService.getTitle('Song Rock!');
+          }
+        }
       }
     }
   })
@@ -59,8 +83,19 @@ angular.module('songhop', ['ionic', 'songhop.controllers'])
         }
       }
     })
+  
+  .state('splash', {
+    url:'/',
+    templateUrl: 'templates/splash.html',
+    controller: 'SplashCtrl',
+    onEnter: function($state, User){
+      User.checkSession().then(function(hasSession) {
+        //if (hasSession) $state.go('tab.home');
+      });
+    }
+  })
   // If none of the above states are matched, use this as the fallback:
-  $urlRouterProvider.otherwise('/tab/discover');
+  $urlRouterProvider.otherwise('/');
 
 })
 

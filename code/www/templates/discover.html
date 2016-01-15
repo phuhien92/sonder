@@ -1,31 +1,50 @@
-<ion-view view-title="Discover" class="discover-page">
-  <ion-content scroll="false">
-
-
-    <div class="list card current-song">
-
-      <div class="item item-image">
-        <img ng-src="/img/ionic.png">
+<ion-view view-title="{{navTitle}}" class="discover-page text-uppercase">
+  <ion-content scroll="false" style='background:url({{currentSong.image_large}}); background-size: cover;' class="song-container">
+  <div class="bgshadow">
+    <div class="list card current-song" ng-class="{skipped: currentSong.rated == false, favorited: currentSong.rated == true}" ng-show="currentSong && !currentSong.hide ">
+      <div class="item item-image" on-swipe-left="swipeToNextSong()" on-swipe-right="swipeToFav()">
+        <div class="item-image-inner {{mediaPlay}}" style="width: {{vwidth}}px; height: {{vwidth}}px;">
+          <div class="circle">
+            <div
+              round-progress
+              max="max"
+              current="current"
+              color="#3893B5"
+              bgcolor="#eaeaea"
+              radius="{{getCustomSize(vwidth, 50)}}"
+              stroke="{{getCustomSize(vwidth, 10)}}"
+              semi="isSemi"
+              rounded="rounded"
+              clockwise="clockwise"
+              responsive="responsive"
+              duration="800"
+              animation="easeInOutQuart"></div>
+            <img ng-src="{{currentSong.image_large}}" />
+          </div>
+        </div>
       </div>
 
-      <div class="item">
-        <h2>It's so cold in Wisconsin</h2>
-        <p>Max Lynch</p>
+      <div class="item song-detail">
+        <h2 class="text-center">{{currentSong.title}}</h2>
+        <p class="text-center">By {{currentSong.artist}}</p>
       </div>
 
-      <div class="item tabs tabs-secondary tabs-icon-left">
-        <a class="tab-item">
-          <i class="icon ion-close"></i>
+      <div class="item tabs tabs-secondary tabs-icon-left bg-gray">
+        <a class="tab-item skip-tab tab-white opacity-1x" ng-click="sendFeedback(false)">
+          <i class="icon ion-close ion-2x"></i>
           Skip
         </a>
-        <a class="tab-item">
-          <i class="icon ion-heart"></i>
+        <a class="tab-item tab-white opacity-1x" ng-click="sendFeedback(true)">
+          <i class="icon ion-heart ion-2x"></i>
           Favorite
         </a>
       </div>
-
     </div>
-
+  </div>
+    <div class="img-lookahead">
+      <img ng-src="{{ nextAlbumImg() }}" />
+    </div>
 
   </ion-content>
 </ion-view>
+
