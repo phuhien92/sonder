@@ -75,7 +75,7 @@ Controller for the discover page
 	$scope.vheight= window.innerHeight*85/100;
 	$scope.navTitle = SharedService.message;
 	$scope.max = 30;
-	$scope.current = 1;
+	$scope.current = 30;
 
 	function updateProgress(time) {
 		$scope.progress = $scope.progress + time;
@@ -140,7 +140,7 @@ Controller for the discover page
   		$scope.currentSong.loaded = true;
   		//$scope.max = Recommendations.songDuration();
 
-  		interval = $interval(progressbar, 1000);
+  		//interval = $interval(progressbar, 1000);
   	});
 
   	$rootScope.$ionicGoBack = function() {
