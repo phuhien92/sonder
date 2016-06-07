@@ -7,7 +7,6 @@
     
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="lib/ion-radial-progress/dist/css/ion-radial-progress.css">
     <link href="css/style.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above -->
@@ -16,7 +15,7 @@
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
     <!-- ionic-radial-progress -->
 
     <!-- cordova script (this will be a 404 during development) -->
@@ -31,9 +30,13 @@
     <script src="js/services.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/directives.js"></script>
-    <script src="lib/ion-radial-progress/dist/js/ion-radial-progress.js"></script>
-    <script src="http://crisbeto.github.io/angular-svg-round-progressbar/roundProgress.min.js"></script>
-  </head>
+    
+    <!-- Moment -->
+    <script src="lib/moment/moment.min.js"></script>
+
+    <!-- rounded progrssbar for timer on player -->
+    <script src="lib/angular-svg-round-progressbar/roundProgress.min.js"></script>  
+</head>
   <body ng-app="songhop">
     <!--
       The nav bar that will be updated as we navigate between views.

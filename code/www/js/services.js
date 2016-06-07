@@ -112,11 +112,11 @@ angular.module('songhop.services', ['ionic.utils'])
 		media = new Audio(o.queue[0].preview_url);
 
 		media.addEventListener('loadeddata', function() {
+			media.play();
 			defer.resolve();
-			console.log(media.duration);
 		});
-
 		media.play();
+
 		return defer.promise;
 	};
 

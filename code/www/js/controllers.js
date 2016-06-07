@@ -1,8 +1,8 @@
 angular.module('songhop.controllers', [
 	'ionic', 
 	'songhop.services',
-	'angular-svg-round-progress',
-	'songhop.directives'
+	'songhop.directives',
+	'angular-svg-round-progress'
 ])
 
 /*
@@ -66,21 +66,12 @@ Controller for the discover page
 .controller('DiscoverCtrl', function($scope, $rootScope, $interval, $ionicLoading,$timeout, User, Recommendations, SharedService) {
 	//helper function for loading
 	var self = this;
-	var interval;
+	var interval = null;
 	var oldSoftBack = $rootScope.$ionicGoBack;
 
-
-	$scope.progress = 0;
 	$scope.vwidth = window.innerWidth*85/100;
 	$scope.vheight= window.innerHeight*85/100;
 	$scope.navTitle = SharedService.message;
-	$scope.max = 30;
-	$scope.current = 30;
-
-	function updateProgress(time) {
-		$scope.progress = $scope.progress + time;
-		console.log($scope.progress);
-	}
 
 	$scope.getCustomSize = function(size, percent) {
 		return size*percent/100;
@@ -112,36 +103,27 @@ Controller for the discover page
 
   	// fire when we favorite/skip the song
   	$scope.sendFeedback = function(bool) {
+  		$scope.timerSetup(0);
+  		showLoading();
+
   		if (bool) User.addSongToFavorites($scope.currentSong);
 
   		$scope.currentSong.rated = bool;
   		$scope.currentSong.hide  = true;
 
   		Recommendations.nextSong();
-
-  		$timeout(function() {
-  			$scope.currentSong = Recommendations.queue[0];
-  			$scope.currentSong.loaded = false;
-  		}, 250);
-
-  		Recommendations.playCurrentSong().then(function() {
-  			$scope.currentSong.loaded = true;
-  			var time = Recommendations.songDuration();
-  		});
+  		playSong();
   	};
 
-  	Recommendations.init()
-  	.then(function() {
+  	function playSong() {
   		$scope.currentSong = Recommendations.queue[0];
-  		Recommendations.playCurrentSong();
-  	})
-  	.then(function() {
-  		hideLoading();
-  		$scope.currentSong.loaded = true;
-  		//$scope.max = Recommendations.songDuration();
-
-  		//interval = $interval(progressbar, 1000);
-  	});
+  		Recommendations.playCurrentSong().then(function() {
+  			$scope.timerSetup(Recommendations.songDuration());
+  			interval = $timeout($scope.progressbar, 1000);
+  			$scope.currentSong.loaded = true;
+  			hideLoading();
+  		});
+  	}
 
   	$rootScope.$ionicGoBack = function() {
     	Recommendations.haltAudio();
@@ -149,9 +131,36 @@ Controller for the discover page
     	oldSoftBack();
   	};
 
-  	function progressbar() {
-        $scope.current = $scope.current + 1; 
-        if ($scope.current == 30) {$interval.cancel(interval);}
+  	$scope.max = 30;
+	$scope.timer  = 0;
+
+	// When current song loaded
+	$scope.timerSetup = function(val) {
+		$scope.timer = val;
+		$scope.max   = val;
+		$scope.started = false;
+		$scope.paused  = false;
+		$scope.done    = false;
+	}
+
+  	Recommendations.init()
+  	.then(function() {
+  		$scope.currentSong = Recommendations.queue[0];
+  		playSong();
+  	})
+
+  	// actually timer method, count down every second, stops on zero
+  	
+  	$scope.progressbar = function() {
+  		console.log($scope.timer)
+        if ($scope.timer === 0) {
+        	$scope.$broadcast('timer-stopped', $scope.timer);
+        	$scope.currentSong.loaded = false;
+        	$interval.cancel(interval);
+        	return;
+        }
+        $scope.timer = $scope.timer - 1;
+        interval = $timeout($scope.progressbar, 1000);
   	}
 
   	$scope.nextAlbumImg = function() {
@@ -163,12 +172,10 @@ Controller for the discover page
 
   	$scope.swipeToNextSong = function() {
   		$scope.sendFeedback(false);
-  		$scope.current = 0;
   	}
 
   	$scope.swipeToFav = function() {
   		$scope.sendFeedback(true);
-  		$scope.current = 0;
   	}
 
   	$scope.mediaPlay = 'play';

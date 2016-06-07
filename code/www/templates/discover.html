@@ -3,24 +3,11 @@
   <div class="bgshadow">
     <div class="list card current-song" ng-class="{skipped: currentSong.rated == false, favorited: currentSong.rated == true}" ng-show="currentSong && !currentSong.hide ">
       <div class="item item-image" on-swipe-left="swipeToNextSong()" on-swipe-right="swipeToFav()">
-        <div class="item-image-inner {{mediaPlay}}" style="width: {{vwidth}}px; height: {{vwidth}}px;">
-          <div class="circle">
-            <div
-              round-progress
-              max="max"
-              current="current"
-              color="#3893B5"
-              bgcolor="#eaeaea"
-              radius="{{getCustomSize(vwidth, 50)}}"
-              stroke="{{getCustomSize(vwidth, 10)}}"
-              semi="isSemi"
-              rounded="rounded"
-              clockwise="clockwise"
-              responsive="responsive"
-              duration="30000"
-              animation="linearEase"></div>
-            <img ng-src="{{currentSong.image_large}}" />
-          </div>
+        <div class="progress-wrapper">
+            <div class="progress">
+               <img ng-src="{{currentSong.image_medium}}">
+            </div>
+          <round-progress max="max" current="timer" clockwise="false" color="#ef473a" radius="120" rounded="true" stroke="20" class="text-center"></round-progress>
         </div>
       </div>
 
