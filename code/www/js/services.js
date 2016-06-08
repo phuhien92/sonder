@@ -128,12 +128,8 @@ angular.module('songhop.services', ['ionic.utils'])
 		if (media) media.pause();
 	};
 
-	o.controlSong = function(bool) {
-		if (bool) {
-			media.pause();
-		} else {
-			media.play();
-		}
+	o.playAudio = function() {
+		if (media) media.play();
 	};
 
 	o.currentTime = function() {

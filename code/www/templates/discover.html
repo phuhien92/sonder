@@ -21,10 +21,13 @@
           <i class="icon ion-close ion-2x"></i>
           Skip
         </a>
+        <a class="button icon ion-play" id="play-music" ng-click="playAudio();" ng-show="!started"></a>
+        
         <a class="tab-item tab-white opacity-1x" ng-click="sendFeedback(true)">
           <i class="icon ion-heart ion-2x"></i>
           Favorite
         </a>
+        <a class="button icon ion-pause" id="pause-music" ng-click="haltAudio();" ng-show="started"></a>
       </div>
     </div>
   </div>

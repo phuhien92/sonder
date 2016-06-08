@@ -73,10 +73,6 @@ Controller for the discover page
 	$scope.vheight= window.innerHeight*85/100;
 	$scope.navTitle = SharedService.message;
 
-	$scope.getCustomSize = function(size, percent) {
-		return size*percent/100;
-	}
-
 	var showLoading = function() {
 		$ionicLoading.show({
 			template: '<i class="ion-loading-c"></i>',
@@ -122,6 +118,8 @@ Controller for the discover page
   			interval = $timeout($scope.progressbar, 1000);
   			$scope.currentSong.loaded = true;
   			hideLoading();
+
+  			$scope.started = true;
   		});
   	}
 
@@ -139,7 +137,7 @@ Controller for the discover page
 		$scope.timer = val;
 		$scope.max   = val;
 		$scope.started = false;
-		$scope.paused  = false;
+		$scope.paused  = true;
 		$scope.done    = false;
 	}
 
@@ -189,12 +187,24 @@ Controller for the discover page
   			Recommendations.controlSong(true);
   			$interval.cancel(interval);
   		}
-  		
-  	}
+  	};
+
+  	$scope.pauseSong = function() {
+  		console.log('sds')
+  		Recommendations.haltAudio();
+  		$scope.started = false;
+  		$scope.paused  = true;
+  	};
+  	$scope.playSong  = function() {
+  		console.log('sds')
+  		Recommendations.playAudio();
+  		$scope.started = true;
+  		$scope.paused  = false;
+  	};
 
   	$scope.trackProgress = function() {
+  		alert("media")
   		time = Math.ceil(Recommendations.currentTime());
-  		console.log(time);
   		return time;
   	}
 })
