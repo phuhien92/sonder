@@ -99,7 +99,7 @@ Controller for the discover page
 
   	// fire when we favorite/skip the song
   	$scope.sendFeedback = function(bool) {
-  		$scope.timerSetup(0);
+  		$scope.timerSetup(0,0);
   		showLoading();
 
   		if (bool) User.addSongToFavorites($scope.currentSong);
@@ -111,17 +111,21 @@ Controller for the discover page
   		playSong();
   	};
 
-  	function playSong() {
+  	var playSong = function() {
   		$scope.currentSong = Recommendations.queue[0];
   		Recommendations.playCurrentSong().then(function() {
-  			$scope.timerSetup(Recommendations.songDuration());
-  			interval = $timeout($scope.progressbar, 1000);
-  			$scope.currentSong.loaded = true;
-  			hideLoading();
+  			var timer = max = Recommendations.songDuration();
 
-  			$scope.started = true;
+  			$scope.timerSetup(timer,max, {
+        		done 	: false,
+        		paused 	: false,
+        		started : true
+        	});
+
+  			interval = $interval($scope.progressbar, 1000);
+  			hideLoading();
   		});
-  	}
+  	};
 
   	$rootScope.$ionicGoBack = function() {
     	Recommendations.haltAudio();
@@ -133,12 +137,25 @@ Controller for the discover page
 	$scope.timer  = 0;
 
 	// When current song loaded
-	$scope.timerSetup = function(val) {
-		$scope.timer = val;
-		$scope.max   = val;
-		$scope.started = false;
-		$scope.paused  = true;
-		$scope.done    = false;
+	$scope.timerSetup = function(timer, max, options) {
+		$scope.timer 	= timer;
+		$scope.max   	= max;
+		var defaultOpts = {
+			started: false,
+			paused : true,
+			done   : false
+		};
+
+		if (options) defaultOpts = options;
+		$scope.mediaStatus(defaultOpts);
+	}
+
+	$scope.mediaStatus = function(defaultOpts) {
+		$scope.started = defaultOpts.started;
+		$scope.paused  = defaultOpts.paused;
+		$scope.done    = defaultOpts.done;
+
+		return defaultOpts;
 	}
 
   	Recommendations.init()
@@ -150,15 +167,20 @@ Controller for the discover page
   	// actually timer method, count down every second, stops on zero
   	
   	$scope.progressbar = function() {
-  		console.log($scope.timer)
+  		console.log($scope.timer);
+
         if ($scope.timer === 0) {
-        	$scope.$broadcast('timer-stopped', $scope.timer);
         	$scope.currentSong.loaded = false;
         	$interval.cancel(interval);
+
+        	$scope.mediaStatus({
+        		done    :true,
+        		started :false,
+        		paused  :false
+        	})
         	return;
         }
         $scope.timer = $scope.timer - 1;
-        interval = $timeout($scope.progressbar, 1000);
   	}
 
   	$scope.nextAlbumImg = function() {
@@ -176,34 +198,33 @@ Controller for the discover page
   		$scope.sendFeedback(true);
   	}
 
-  	$scope.mediaPlay = 'play';
-  	$scope.controlCurrentSong = function(state) {
-  		if (state == 'stop') {
-  			$scope.mediaPlay = 'play';
-  			Recommendations.controlSong(false);
-  			interval = $interval(progressbar,1000);
-  		} else {
-  			$scope.mediaPlay = 'stop';
-  			Recommendations.controlSong(true);
-  			$interval.cancel(interval);
-  		}
-  	};
-
-  	$scope.pauseSong = function() {
-  		console.log('sds')
+  	$scope.currentTimer = 0;
+  	$scope.pauseMode = function() {
+  		$scope.currentTimer = $scope.timer;
+  		$interval.cancel(interval);
   		Recommendations.haltAudio();
-  		$scope.started = false;
-  		$scope.paused  = true;
+  		
+		$scope.mediaStatus({
+  			started: false,
+  			paused : true,
+  			done   : false
+  		});
   	};
-  	$scope.playSong  = function() {
-  		console.log('sds')
+  	
+  	$scope.playMode  = function(replay) {
+  		if (replay) $scope.currentTimer = 0;
+
+  		interval = $interval($scope.progressbar, 1000);
   		Recommendations.playAudio();
-  		$scope.started = true;
-  		$scope.paused  = false;
+
+  		$scope.timerSetup($scope.currentTimer, $scope.max,{
+  			started: true,
+  			paused : false,
+  			done   : false
+  		});
   	};
 
   	$scope.trackProgress = function() {
-  		alert("media")
   		time = Math.ceil(Recommendations.currentTime());
   		return time;
   	}
