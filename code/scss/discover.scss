@@ -324,17 +324,12 @@
     opacity: 1;
   }
 }
- 
-.animate-in-primary {
-    -webkit-animation: animateInPrimary;
-    animation: animateInPrimary;
-    -webkit-animation-duration: 750ms;
-    animation-duraton: 750ms;
+
+.music-mode, .music-mode:hover, .music-mode:focus {
+  border-radius: 50%;
+  border-radius: 50%;
+  color: #fff;
+  background: transparent;
+  border: none;
 }
- 
-.animate-in-secondary {
-    -webkit-animation: animateInSecondary ease-in 1;
-    animation: animateInSecondary ease-in 1;
-    -webkit-animation-duration: 750ms;
-    animation-duraton: 750ms;
-}
+

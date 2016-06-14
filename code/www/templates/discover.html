@@ -15,21 +15,14 @@
         <h2 class="text-center">{{currentSong.title}}</h2>
         <p class="text-center">By {{currentSong.artist}}</p>
       </div>
-      <a href="#" onclick="alert('ss')">sada</a>
       <div class="item tabs tabs-secondary tabs-icon-left bg-gray">
         <a class="tab-item skip-tab tab-white opacity-1x" ng-click="sendFeedback(false)">
           <i class="icon ion-close ion-2x"></i>
           Skip
         </a>
-        <a class="button music-mode" ng-click="playMode();" ng-show="paused">
-          <i class="icon ion-play"></i>
-        </a>
-        <a class="button music-mode" ng-click="pauseMode();" ng-show="started">
-          <i class="icon ion-pause"></i>
-        </a>
-        <a class="button music-mode" ng-click="playMode(true);" ng-show="done">
-          <i class="icon ion-refresh"></i>
-        </a>
+        <a class="button music-mode icon ion-play" ng-click="playMode();" ng-show="paused"></a>
+        <a class="button music-mode icon ion-pause" ng-click="pauseMode();" ng-show="started"></a>
+        <a class="button music-mode icon ion-refresh" ng-click="playMode(true);" ng-show="done"></a>
         <a class="tab-item tab-white opacity-1x" ng-click="sendFeedback(true)">
           <i class="icon ion-heart ion-2x"></i>
           Favorite

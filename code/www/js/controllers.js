@@ -65,9 +65,25 @@ Controller for the discover page
 */
 .controller('DiscoverCtrl', function($scope, $rootScope, $interval, $ionicLoading,$timeout, User, Recommendations, SharedService) {
 	//helper function for loading
+	// $rootScope.mediaStatus = function(defaultOpts) {
+	// 	$rootScope.started = defaultOpts.started;
+	// 	$rootScope.paused  = defaultOpts.paused;
+	// 	$rootScope.done    = defaultOpts.done;
+
+	// 	return defaultOpts;
+	// }
+
+	$rootScope.mediaStatus({
+		done    :true,
+		started :false,
+		paused  :false
+	})
+
 	var self = this;
-	var interval = null;
 	var oldSoftBack = $rootScope.$ionicGoBack;
+
+	if ($rootScope.interval === undefined)
+		$rootScope.interval = null;
 
 	$scope.vwidth = window.innerWidth*85/100;
 	$scope.vheight= window.innerHeight*85/100;
@@ -122,7 +138,7 @@ Controller for the discover page
         		started : true
         	});
 
-  			interval = $interval($scope.progressbar, 1000);
+  			$rootScope.interval = $interval($scope.progressbar, 1000);
   			hideLoading();
   		});
   	};
@@ -147,15 +163,7 @@ Controller for the discover page
 		};
 
 		if (options) defaultOpts = options;
-		$scope.mediaStatus(defaultOpts);
-	}
-
-	$scope.mediaStatus = function(defaultOpts) {
-		$scope.started = defaultOpts.started;
-		$scope.paused  = defaultOpts.paused;
-		$scope.done    = defaultOpts.done;
-
-		return defaultOpts;
+		$rootScope.mediaStatus(defaultOpts);
 	}
 
   	Recommendations.init()
@@ -171,9 +179,9 @@ Controller for the discover page
 
         if ($scope.timer === 0) {
         	$scope.currentSong.loaded = false;
-        	$interval.cancel(interval);
+        	$interval.cancel($rootScope.interval);
 
-        	$scope.mediaStatus({
+        	$rootScope.mediaStatus({
         		done    :true,
         		started :false,
         		paused  :false
@@ -199,12 +207,12 @@ Controller for the discover page
   	}
 
   	$scope.currentTimer = 0;
-  	$scope.pauseMode = function() {
+  	$rootScope.pauseMode = function() {
   		$scope.currentTimer = $scope.timer;
-  		$interval.cancel(interval);
+  		$interval.cancel($rootScope.interval);
   		Recommendations.haltAudio();
   		
-		$scope.mediaStatus({
+		$rootScope.mediaStatus({
   			started: false,
   			paused : true,
   			done   : false
@@ -214,7 +222,7 @@ Controller for the discover page
   	$scope.playMode  = function(replay) {
   		if (replay) $scope.currentTimer = 0;
 
-  		interval = $interval($scope.progressbar, 1000);
+  		$rootScope.interval = $interval($scope.progressbar, 1000);
   		Recommendations.playAudio();
 
   		$scope.timerSetup($scope.currentTimer, $scope.max,{
@@ -265,14 +273,31 @@ Controller for the favorites page
 /*
 Controller for our tab bar
 */
-.controller('TabsCtrl', function($scope, Recommendations, User) {
+.controller('TabsCtrl', function($rootScope,$scope, $interval, Recommendations, User) {
 	$scope.enteringFavorites = function() {
 		User.newFavorites = 0;
 		Recommendations.haltAudio();
+		
+		if ($rootScope.interval != undefined)
+			$interval.cancel($rootScope.interval)
 	};
 
-	$scope.leavingFavorites = function() {
-		Recommendations.init();
+	$scope.enteringDiscover = function() {
+		// Recommendations.init();
+
+		$rootScope.mediaStatus = function(defaultOpts) {
+			$rootScope.started = defaultOpts.started;
+			$rootScope.paused  = defaultOpts.paused;
+			$rootScope.done    = defaultOpts.done;
+
+			return defaultOpts;
+		}
+
+		$rootScope.mediaStatus({
+			done    :true,
+			started :false,
+			paused  :false
+		})
 	};
 
 	$scope.favCount = User.favoritesCount;

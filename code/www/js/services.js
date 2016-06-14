@@ -1,4 +1,5 @@
 angular.module('songhop.services', ['ionic.utils'])
+
 .factory('User', function($http, SERVER, $q, $localstorage) {
 	var o = {
 		username: false,
@@ -98,6 +99,7 @@ angular.module('songhop.services', ['ionic.utils'])
 
  	return o;
 })
+
 .factory('Recommendations', function($http, SERVER, $q, $cordovaMedia) {	
 
 	var o = {
