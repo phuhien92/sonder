@@ -73,6 +73,7 @@ Controller for the discover page
 	// 	return defaultOpts;
 	// }
 
+
 	$rootScope.mediaStatus({
 		done    :true,
 		started :false,
@@ -150,11 +151,11 @@ Controller for the discover page
   	};
 
   	$scope.max = 30;
-	$scope.timer  = 0;
+	$rootScope.timer  = $rootScope.timer || 0;
 
 	// When current song loaded
 	$scope.timerSetup = function(timer, max, options) {
-		$scope.timer 	= timer;
+		$rootScope.timer 	= timer;
 		$scope.max   	= max;
 		var defaultOpts = {
 			started: false,
@@ -175,9 +176,7 @@ Controller for the discover page
   	// actually timer method, count down every second, stops on zero
   	
   	$scope.progressbar = function() {
-  		console.log($scope.timer);
-
-        if ($scope.timer === 0) {
+        if ($rootScope.timer === 0) {
         	$scope.currentSong.loaded = false;
         	$interval.cancel($rootScope.interval);
 
@@ -188,7 +187,7 @@ Controller for the discover page
         	})
         	return;
         }
-        $scope.timer = $scope.timer - 1;
+        $rootScope.timer = $rootScope.timer - 1;
   	}
 
   	$scope.nextAlbumImg = function() {
@@ -206,9 +205,9 @@ Controller for the discover page
   		$scope.sendFeedback(true);
   	}
 
-  	$scope.currentTimer = 0;
+  	$rootScope.currentTimer = $rootScope.currentTimer || 0;
   	$rootScope.pauseMode = function() {
-  		$scope.currentTimer = $scope.timer;
+  		$rootScope.currentTimer = $rootScope.timer;
   		$interval.cancel($rootScope.interval);
   		Recommendations.haltAudio();
   		
@@ -220,12 +219,16 @@ Controller for the discover page
   	};
   	
   	$scope.playMode  = function(replay) {
-  		if (replay) $scope.currentTimer = 0;
+  		if (replay) {
+  			$rootScope.currentTimer = $rootScope.timer = $scope.max;
+  		} 
 
   		$rootScope.interval = $interval($scope.progressbar, 1000);
-  		Recommendations.playAudio();
+  		$timeout(function() {
+  			Recommendations.playAudio();
+  		},1000);
 
-  		$scope.timerSetup($scope.currentTimer, $scope.max,{
+  		$scope.timerSetup($rootScope.currentTimer, $scope.max,{
   			started: true,
   			paused : false,
   			done   : false
@@ -279,6 +282,7 @@ Controller for our tab bar
 		Recommendations.haltAudio();
 		
 		if ($rootScope.interval != undefined)
+			$rootScope.currentTimer = $rootScope.timer;
 			$interval.cancel($rootScope.interval)
 	};
 
@@ -294,9 +298,9 @@ Controller for our tab bar
 		}
 
 		$rootScope.mediaStatus({
-			done    :true,
+			done    :false,
 			started :false,
-			paused  :false
+			paused  :true
 		})
 	};
 
