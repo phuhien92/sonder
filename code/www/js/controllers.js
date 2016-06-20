@@ -70,17 +70,7 @@ Controller for the home page
 /*
 Controller for the discover page
 */
-.controller('DiscoverCtrl', function($scope, $rootScope, $interval, $ionicLoading,$timeout, User, Recommendations, SharedService) {
-	//helper function for loading
-	// $rootScope.mediaStatus = function(defaultOpts) {
-	// 	$rootScope.started = defaultOpts.started;
-	// 	$rootScope.paused  = defaultOpts.paused;
-	// 	$rootScope.done    = defaultOpts.done;
-
-	// 	return defaultOpts;
-	// }
-
-
+.controller('DiscoverCtrl', function($scope, $rootScope, $interval,$timeout, User, Recommendations, SharedService) {
 	$rootScope.mediaStatus({
 		done    :true,
 		started :false,
@@ -97,19 +87,6 @@ Controller for the discover page
 	$scope.vheight= window.innerHeight*85/100;
 	$scope.navTitle = SharedService.message;
 
-	var showLoading = function() {
-		$ionicLoading.show({
-			template: '<i class="ion-loading-c"></i>',
-			noBackdrop: true
-		})
-	}
-
-	var hideLoading = function() {
-		$ionicLoading.hide();
-	};
-
-	showLoading();
-
 	$scope.songs = [
 	     {
 	        "title":"Stealing Cinderella",
@@ -124,7 +101,6 @@ Controller for the discover page
   	// fire when we favorite/skip the song
   	$scope.sendFeedback = function(bool) {
   		$scope.timerSetup(0,0);
-  		showLoading();
 
   		if (bool) User.addSongToFavorites($scope.currentSong);
 
@@ -147,7 +123,6 @@ Controller for the discover page
         	});
 
   			$rootScope.interval = $interval($scope.progressbar, 1000);
-  			hideLoading();
   		});
   	};
 
@@ -270,13 +245,26 @@ Controller for the favorites page
 	}
 })
 
-.controller('SplashCtrl', function($scope, $state, User) {
+.controller('SplashCtrl', function($scope, $state, User, $ionicLoading) {
+	var showLoading = function() {
+		$ionicLoading.show({
+			template: '<i class="ion-loading-c"></i>',
+			noBackdrop: true
+		})
+	}
+
+	var hideLoading = function() {
+		$ionicLoading.hide();
+	};
 
 	$scope.submitForm = function(username, signingUp) {
+		showLoading();
 		User.auth(username, signingUp).then(function() {
+			hideLoading();
 			$state.go('tab.home');
 		}, function() {
-			alert('try another username');
+			hideLoading();
+			alert('Invalid account! Try again.');
 		});
 	}
 })

@@ -14,7 +14,6 @@ angular.module('songhop.services', ['ionic.utils'])
 		o.favorites.unshift(song);
 		o.newFavorites++;
 
-		console.log(o.newFavorites);
 		return $http.post(SERVER.url + '/favorites', {session_id: o.session_id, song_id: o.song_id});
 	};
 
