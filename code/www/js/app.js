@@ -90,7 +90,7 @@ angular.module('songhop', ['ionic','ngCordova','songhop.controllers'])
     controller: 'SplashCtrl',
     onEnter: function($state, User){
       User.checkSession().then(function(hasSession) {
-        //if (hasSession) $state.go('tab.home');
+        if (hasSession) $state.go('tab.home');
       });
     }
   })

@@ -103,6 +103,10 @@
 .discover-page .song-container .card {
   margin-top: 0px;
   padding-top: 30px;
+  #media-controll {
+    border: 2px solid #fff !important;
+    border-radius: 1em;
+  }
 }
 
 .discover-page .current-song {

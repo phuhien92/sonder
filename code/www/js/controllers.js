@@ -8,13 +8,20 @@ angular.module('songhop.controllers', [
 /*
 Controller for the home page
 */
-.controller('HomeCtrl', function($scope, $timeout, SharedService) {
+.controller('HomeCtrl', function($rootScope,$scope, $timeout, SharedService, Recommendations) {
 	$scope.navTitle = 'Home';
 	$scope.musictag = "#";
 	var self = this;
 
 	$scope.changeTitle = function(title) {
 		SharedService.add('#'+title);
+
+		$rootScope.currentTimer = $rootScope.timer = 0;
+		$rootScope.mediaStatus({
+			done    :false,
+			started :false,
+			paused  :true
+		})
 	}
 
 	$scope.musicCollections = [
@@ -287,8 +294,6 @@ Controller for our tab bar
 	};
 
 	$scope.enteringDiscover = function() {
-		// Recommendations.init();
-
 		$rootScope.mediaStatus = function(defaultOpts) {
 			$rootScope.started = defaultOpts.started;
 			$rootScope.paused  = defaultOpts.paused;
