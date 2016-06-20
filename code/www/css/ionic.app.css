@@ -8487,3 +8487,7 @@ a.button {
 
 .text-capitalize {
   text-transform: capitalize; }
+
+#discover-loading.no-ready {
+  visibility: visible;
+  opacity: 1; }

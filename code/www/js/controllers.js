@@ -71,6 +71,7 @@ Controller for the home page
 Controller for the discover page
 */
 .controller('DiscoverCtrl', function($scope, $rootScope, $interval,$timeout, User, Recommendations, SharedService) {
+	$scope.mediaReady = false;
 	$rootScope.mediaStatus({
 		done    :true,
 		started :false,
@@ -112,6 +113,7 @@ Controller for the discover page
   	};
 
   	var playSong = function() {
+  		$scope.mediaReady  = false;
   		$scope.currentSong = Recommendations.queue[0];
   		Recommendations.playCurrentSong().then(function() {
   			var timer = max = Recommendations.songDuration();
@@ -123,6 +125,7 @@ Controller for the discover page
         	});
 
   			$rootScope.interval = $interval($scope.progressbar, 1000);
+  			$scope.mediaReady = true;
   		});
   	};
 

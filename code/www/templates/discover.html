@@ -33,7 +33,11 @@
     <div class="img-lookahead">
       <img ng-src="{{ nextAlbumImg() }}" />
     </div>
-
+  <div class="loading-container" id="discover-loading" ng-class="mediaReady ? '':'no-ready' ">
+    <div class="loading">
+      <i class="ion-loading-c"></i>
+    </div>
+  </div>
   </ion-content>
 </ion-view>
 
