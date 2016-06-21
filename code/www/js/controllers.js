@@ -13,6 +13,9 @@ Controller for the home page
 	$scope.musictag = "#";
 	var self = this;
 
+	if ($rootScope.interval != undefined) 
+		$interval.cancel($rootScope.interval);
+
 	$scope.changeTitle = function(title) {
 		SharedService.add('#'+title);
 
@@ -281,7 +284,7 @@ Controller for our tab bar
 		
 		if ($rootScope.interval != undefined)
 			$rootScope.currentTimer = $rootScope.timer;
-			$interval.cancel($rootScope.interval)
+			$interval.cancel($rootScope.interval);
 	};
 
 	$scope.enteringDiscover = function() {
